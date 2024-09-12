@@ -1,0 +1,18 @@
+HAW to puch images in ECR 
+    1- log in private repo
+>     $: docker login //copy it from aws gui >view puch command 
+      to do that you shold have 
+       1- AWS cli installed 
+       2- credentials configuerd
+
+    2-taginge images >>image 620 loock at 
+     if $:docker puch ..... >>it will go to docker-hup by default
+     if we want to push image to aws-ecr we should tage images
+>      $:docker tage myapp:1.1 ..............................>tack the new tage name frome aws gui >view puch command 
+     then puch image
+>      $:docker puch ..............................:
+
+
+//////////////////////////////////////////////////////////////////////
+OR WE CAN USE NEXUS
+

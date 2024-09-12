@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  
+  # Python Flask service with PostgreSQL
+  python-app:
+    build: ./python-app
+    ports:
+      - "5000:5000"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: python_db
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: python_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+      
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  postgres-data:

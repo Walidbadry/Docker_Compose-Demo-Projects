@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  
+  # Node.js service with MongoDB
+  node-mongo-app:
+    build: ./node-mongo-app
+    ports:
+      - "3002:3002"
+    environment:
+      MONGO_URL: mongodb://mongo:27017/node_mongo_db
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # MongoDB database
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

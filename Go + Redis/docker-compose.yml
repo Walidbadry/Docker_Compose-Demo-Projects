@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  
+  # Go service with Redis cache
+  go-app:
+    build: ./go-app
+    ports:
+      - "8080:8080"
+    environment:
+      REDIS_HOST: redis
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  # Redis cache
+  redis:
+    image: redis:6
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  postgres-data:

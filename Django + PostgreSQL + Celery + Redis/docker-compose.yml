@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  django-app:
+    build: ./django-app
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - ./django-app:/app
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_HOST: postgres
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - app-network
+
+  celery-worker:
+    build: ./django-app
+    command: celery -A myproject worker -l info
+    depends_on:
+      - redis
+      - django-app
+    networks:
+      - app-network
+
+  redis:
+    image: redis:alpine
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

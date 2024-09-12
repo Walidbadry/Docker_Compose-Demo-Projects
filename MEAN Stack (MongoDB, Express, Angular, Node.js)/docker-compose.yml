@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  # Angular Frontend Service
+  angular-app:
+    build: ./angular-app
+    ports:
+      - "4200:80"   # Angular serves on port 4200 inside the container, we map to port 80
+    networks:
+      - app-network
+
+  # Node.js + Express Backend API
+  node-api:
+    build: ./node-api
+    ports:
+      - "3000:3000"   # Express serves on port 3000
+    environment:
+      MONGO_URL: mongodb://mongo:27017/meanapp
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # MongoDB Database
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:

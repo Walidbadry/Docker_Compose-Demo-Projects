@@ -1,0 +1,166 @@
+1. Dockerizing a Python Application
+
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the requirements file and install dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Command to run the app
+CMD ["python", "app.py"]
+
+
+------------------------------------------------------------------
+
+
+2. Dockerizing a Java Application
+
+# Use an official OpenJDK image
+FROM openjdk:11-jre-slim
+
+# Create app directory and set it as the working directory
+WORKDIR /usr/src/app
+
+# Copy the JAR file into the container
+COPY target/myapp.jar /usr/src/app/myapp.jar
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Command to run the JAR file
+CMD ["java", "-jar", "myapp.jar"]
+
+
+
+------------------------------------------------------------------
+
+3. Dockerizing a Go Application
+
+# Use an official Go image for building the app
+FROM golang:1.18 AS builder
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go mod files and download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy the source code
+COPY . .
+
+# Build the Go app
+RUN go build -o main .
+
+# Use a minimal base image to run the binary
+FROM alpine:latest
+
+# Set the working directory
+WORKDIR /root/
+
+# Copy the binary from the build stage
+COPY --from=builder /app/main .
+
+# Expose port 8080
+EXPOSE 8080
+
+# Command to run the binary
+CMD ["./main"]
+
+------------------------------------------------------------------
+
+4. Dockerizing a Ruby on Rails Application
+
+
+# Use an official Ruby runtime as a parent image
+FROM ruby:3.1-slim
+
+# Set environment variables
+ENV RAILS_ENV production
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Install dependencies
+COPY Gemfile Gemfile.lock ./
+RUN bundle install --without development test
+
+# Copy the rest of the application code
+COPY . .
+
+# Precompile assets and migrate the database
+RUN bundle exec rake assets:precompile
+RUN bundle exec rake db:migrate
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to run the Rails server
+CMD ["rails", "server", "-b", "0.0.0.0"]
+
+
+------------------------------------------------------------------
+
+
+5. Dockerizing a C++ Application
+
+# Use an official gcc image to build the app
+FROM gcc:latest AS builder
+
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Copy the source code
+COPY . .
+
+# Compile the C++ program
+RUN g++ -o myapp main.cpp
+
+# Use a minimal base image to run the binary
+FROM alpine:latest
+
+# Set the working directory
+WORKDIR /root/
+
+# Copy the compiled binary from the build stage
+COPY --from=builder /usr/src/app/myapp .
+
+# Command to run the binary
+CMD ["./myapp"]
+
+
+------------------------------------------------------------------
+
+6. Dockerizing a PHP Application
+
+# Use an official PHP-Apache image
+FROM php:8.1-apache
+
+# Set the working directory
+WORKDIR /var/www/html
+
+# Install PHP extensions if needed (for example, mysqli)
+RUN docker-php-ext-install mysqli
+
+# Copy the application code
+COPY . .
+
+# Expose the web server port
+EXPOSE 80
+
+# Start Apache
+CMD ["apache2-foreground"]
+
+
+------------------------------------------------------------------
+

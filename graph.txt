@@ -1,0 +1,26 @@
+multi-lang-project/
+│
+├── node-app/        # Node.js API (backend)
+│   ├── Dockerfile
+│   ├── package.json
+│   └── server.js
+│
+├── python-app/      # Python Flask App (backend)
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── app.py
+│
+├── go-app/          # Go Web Service (backend)
+│   ├── Dockerfile
+│   └── main.go
+│
+├── mysql/           # MySQL database for Node.js app
+│   └── Dockerfile
+│
+├── postgres/        # PostgreSQL database for Python app
+│   └── Dockerfile
+│
+├── redis/           # Redis cache for Go app
+│   └── Dockerfile
+│
+└── docker-compose.yml

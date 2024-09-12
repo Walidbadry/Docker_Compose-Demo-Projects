@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  
+  # Node.js service with MySQL
+  node-app:
+    build: ./node-app
+    ports:
+      - "3001:3001"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: example
+      MYSQL_DATABASE: node_db
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+  
+  # MySQL database
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: node_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+  postgres-data:
